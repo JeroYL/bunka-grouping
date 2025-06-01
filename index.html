@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>Bunka Grouping - 創建活動</title>
+  <!-- Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <!-- 你的本地設定與程式 -->
+  <script src="./firebase.js"></script>
+  <script src="./script.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input {
+      padding: 5px;
+      width: 100%;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+    }
+    #roomLink {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background: #f0f0f0;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bunka Grouping</h1>
+  <p>請輸入要分成幾組，以及每組幾人：</p>
+
+  <label for="groupCount">組數：</label>
+  <input type="number" id="groupCount" placeholder="例如：3" />
+
+  <label for="groupSize">每組人數：</label>
+  <input type="number" id="groupSize" placeholder="例如：4" />
+
+  <button onclick="createRoom()">創建活動</button>
+
+  <p id="roomLink"></p>
+</body>
+</html>
