@@ -20,7 +20,7 @@ async function createRoom() {
     createdAt: Date.now()
   });
 
-  const link = `${location.origin}/join.html?room=${roomId}`;
+  const link = `${location.origin}/bunka-grouping/join.html?room=${roomId}`;
   document.getElementById("roomLink").innerText = `請複製此連結分享給參與者：\n${link}`;
 }
 
