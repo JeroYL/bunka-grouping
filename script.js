@@ -1,4 +1,4 @@
-// 頁面載入時讀取資料
+// 頁面載入時，自動從 Firebase 載入分組資料
 window.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const roomId = urlParams.get('room');
@@ -16,6 +16,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+// 當使用者點「參加」按鈕時執行
 async function joinRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const roomId = urlParams.get('room');
@@ -37,21 +38,45 @@ async function joinRoom() {
   const data = roomDoc.data();
   const members = data.members || [];
 
+  // 如果這個名字已經參加過，禁止重複加入
   if (members.find(m => m.name === userName)) {
     alert("你已經參加過了！");
     return;
   }
 
-  // ✅ 真正隨機（不考慮目前組別人數）
-  const assignedGroup = Math.floor(Math.random() * data.groupCount);
-  members.push({ name: userName, group: assignedGroup });
+  // 計算每個組目前人數
+  const groupCounts = Array.from({ length: data.groupCount }, () => 0);
+  members.forEach(m => {
+    groupCounts[m.group]++;
+  });
 
+  const groupSizeLimit = data.groupSize || Infinity;
+
+  // 找出所有還沒滿的組別
+  const availableGroups = groupCounts
+    .map((count, index) => count < groupSizeLimit ? index : -1)
+    .filter(index => index !== -1);
+
+  // 如果所有組都滿了，拒絕加入
+  if (availableGroups.length === 0) {
+    alert("所有組別都已滿！");
+    return;
+  }
+
+  // 從可以加入的組別中隨機抽一個
+  const assignedGroup = availableGroups[Math.floor(Math.random() * availableGroups.length)];
+
+  // 加入成員資料並更新到 Firebase
+  members.push({ name: userName, group: assignedGroup });
   await roomRef.update({ members });
+
   showGroups(members, data.groupCount);
 }
 
+// 顯示目前所有的分組情況
 function showGroups(members, groupCount) {
   const groups = Array.from({ length: groupCount }, () => []);
+
   members.forEach(m => {
     groups[m.group].push(m.name);
   });
