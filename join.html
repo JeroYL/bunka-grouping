@@ -2,19 +2,39 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>Bunka Grouping - 加入活動</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="./firebase.js"></script>
-  <script src="./script.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bunka Grouping - 加入</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    #groupList div {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-  <h1>加入活動</h1>
-  <p id="roomInfo">載入中...</p>
-  <label>你的名字：<input type="text" id="userName"></label>
-  <button onclick="joinRoom()">參加</button>
 
-  <h2>目前分組結果</h2>
+  <h2>加入活動</h2>
+
+  <p id="roomInfo">載入中...</p>
+
+  <p>
+    你的名字：<input type="text" id="userName">
+    <button onclick="joinRoom()">參加</button>
+  </p>
+
+  <h3>目前分組結果</h3>
   <div id="groupList"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+  <script src="script.js"></script>
+
 </body>
 </html>
