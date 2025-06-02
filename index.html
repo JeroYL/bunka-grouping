@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bunka Grouping - 建立分組</title>
+  <title>Bunka Grouping - 建立活動</title>
   <style>
     body {
       font-family: sans-serif;
@@ -34,13 +34,10 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
-  <!-- Firebase 設定 -->
   <script src="firebase.js"></script>
 
   <!-- 功能邏輯 -->
   <script>
-    // 隨機產生 6 位 roomId
     function generateRoomId(length = 6) {
       const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
       return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
