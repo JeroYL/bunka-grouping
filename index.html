@@ -2,52 +2,77 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>Bunka Grouping - 創建活動</title>
-  <!-- Firebase CDN -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <!-- 你的本地設定與程式 -->
-  <script src="./firebase.js"></script>
-  <script src="./script.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bunka Grouping - 建立分組</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       padding: 20px;
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
     }
-    label {
-      display: block;
-      margin: 10px 0 5px;
-    }
-    input {
-      padding: 5px;
-      width: 100%;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-    }
-    #roomLink {
-      margin-top: 20px;
-      white-space: pre-wrap;
-      background: #f0f0f0;
-      padding: 10px;
+    input, button {
+      padding: 8px;
+      margin: 5px 0;
     }
   </style>
 </head>
 <body>
-  <h1>Bunka Grouping</h1>
-  <p>請輸入要分成幾組，以及每組幾人：</p>
 
-  <label for="groupCount">組數：</label>
-  <input type="number" id="groupCount" placeholder="例如：3" />
+  <h2>建立分組活動</h2>
 
-  <label for="groupSize">每組人數：</label>
-  <input type="number" id="groupSize" placeholder="例如：4" />
-
+  <p>
+    組數：<input type="number" id="groupCount" min="1" placeholder="例如 3">
+  </p>
+  <p>
+    每組人數（非必填）：<input type="number" id="groupSize" min="1" placeholder="可留空">
+  </p>
   <button onclick="createRoom()">創建活動</button>
 
-  <p id="roomLink"></p>
+  <p id="roomLink" style="white-space: pre-wrap; margin-top: 20px;"></p>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <!-- Firebase 設定 -->
+  <script src="firebase.js"></script>
+
+  <!-- 功能邏輯 -->
+  <script>
+    // 隨機產生 6 位 roomId
+    function generateRoomId(length = 6) {
+      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+
+    async function createRoom() {
+      const groupCount = parseInt(document.getElementById("groupCount").value);
+      const groupSize = parseInt(document.getElementById("groupSize").value || "0");
+
+      if (!groupCount) {
+        alert("請輸入組數！");
+        return;
+      }
+
+      const roomId = generateRoomId();
+      const dbRef = db.collection("rooms").doc(roomId);
+
+      await dbRef.set({
+        groupCount,
+        groupSize,
+        members: [],
+        createdAt: Date.now()
+      });
+
+      const baseUrl = location.origin.includes("github.io")
+        ? `${location.origin}${location.pathname.replace("index.html", "")}`
+        : location.origin + "/";
+
+      const joinUrl = `${baseUrl}join.html?room=${roomId}`;
+      document.getElementById("roomLink").innerText = `請複製此連結分享給參與者：\n${joinUrl}`;
+    }
+  </script>
+
 </body>
 </html>
